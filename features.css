@@ -1,0 +1,126 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff; /* Light background color */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    width: 100%;
+    background-color: #4caf50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar-logo .logo-img {
+    width: 50px;
+    height: auto;
+}
+
+.navbar-title h1 {
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+.back-btn {
+    background-color: #fff;
+    color: black;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #45a049;
+}
+
+/* Features Section */
+.features-section {
+    margin-top: 120px; /* Adjust for fixed navbar */
+    width: 90%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    
+    margin-bottom: 20px;
+}
+
+.section-description {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    background-color: #78ed7e;
+    padding: 30px;
+    text-align: justify;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.feature-card h3 {
+    font-size: 28px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.feature-card ul {
+    list-style-type: disc;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.feature-card li {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.feature-card ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.feature-card h4 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+}
+
+.feature-card ol li {
+    font-size: 18px;
+    color: #555;
+}

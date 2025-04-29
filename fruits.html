@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruits and Healthy Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+        }
+        #back-button {
+            position: absolute;
+            right: 30px;
+            top: 35px;
+            padding: 10px;
+            background-color: white;
+            color:black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #back-button:hover {
+            background-color: #4CAF50;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+        .search-bar input {
+            width: 400px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        .search-bar button {
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+            justify-items: center;
+            margin: 20px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .card button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .card button:hover {
+            background-color: #45a049;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            text-align: left;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fruits and Healthy Information</h1>
+        <button id="back-button" onclick="window.location.href='home.html'">Back to Home</button>
+    </header>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for a fruit...">
+        <button id="search-button">Search</button>
+    </div>
+    <div class="container" id="fruits-container">
+        <!-- Fruit cards will be dynamically added here -->
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h2 id="fruit-name">Fruit Name</h2>
+            <p id="fruit-details" style="white-space: pre-wrap;">Details about the fruit.</p>
+            <ul id="nutritional-info">
+                <li id="sugar-content">Sugar: </li>
+                <li id="water-content">Water: </li>
+                <li id="calories-content">Calories: </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const fruits = [
+            { name: 'Apple', image: 'https://freepngimg.com/thumb/apple_fruit/24954-4-apple-fruit-file-thumb.png', details: 'Rich in dietary fiber, vitamin C, and antioxidants like flavonoids, apples support heart health and digestive function.', sugar: '19g', water: '86%', calories: '52 kcal' },
+            { name: 'Banana', image: 'https://freepngimg.com/thumb/banana/3-2-banana-png-picture-thumb.png', details: 'Bananas are a great source of potassium and vitamin B6, promoting heart health and muscle function.', sugar: '12g', water: '74%', calories: '89 kcal' },
+            { name: 'Orange', image: 'https://static.vecteezy.com/system/resources/thumbnails/022/825/544/small/orange-fruit-orange-on-transparent-background-free-png.png', details: 'Oranges are packed with vitamin C, supporting immune function and skin health.', sugar: '9g', water: '86%', calories: '47 kcal' },
+            { name: 'Strawberry', image: 'https://freepngimg.com/thumb/categories/1048.png', details: 'Strawberries are rich in antioxidants, vitamin C, and manganese, supporting skin health and reducing inflammation.', sugar: '4g', water: '91%', calories: '32 kcal' },
+            { name: 'Grapes', image: 'https://freepngimg.com/thumb/grapes/33646-8-grape-thumb.png', details: 'Grapes are low in calories and high in vitamins C and K, promoting heart health and bone strength.', sugar: '16g', water: '81%', calories: '69 kcal' },
+            { name: 'Pineapple', image: 'https://freepngimg.com/thumb/pineapple/23-pineapple-fruit-png-image-thumb.png', details: 'Pineapples are rich in vitamin C and bromelain, an enzyme that aids digestion.', sugar: '10g', water: '86%', calories: '50 kcal' },
+            { name: 'Papaya', image: 'https://freepngimg.com/thumb/papaya/24520-1-papaya-photos-thumb.png', details: 'Papayas are rich in vitamin C, vitamin A, and digestive enzymes, promoting healthy digestion.', sugar: '5g', water: '88%', calories: '43 kcal' },
+            { name: 'Mango', image: 'https://freepngimg.com/thumb/categories/1037.png', details: 'Mangoes are rich in vitamin A and C, which support immune function and vision health.', sugar: '14g', water: '83%', calories: '60 kcal' },
+            { name: 'Watermelon', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTavpPQE0qPb5Qzl4ye3ikpyhw2tiZaXrhXcw&s', details: 'Watermelons are hydrating and packed with vitamins A and C, supporting skin health and hydration.', sugar: '9g', water: '92%', calories: '30 kcal' },
+            { name: 'Kiwi', image: 'https://freepngimg.com/thumb/categories/1035.png', details: 'Kiwis are high in vitamin C, fiber, and antioxidants, supporting digestion and immune function.', sugar: '6g', water: '83%', calories: '41 kcal' },
+            { name: 'Blueberry', image: 'https://freepngimg.com/thumb/categories/1024.png', details: 'Blueberries are rich in antioxidants, particularly anthocyanins, which protect against oxidative stress.', sugar: '10g', water: '84%', calories: '57 kcal' },
+            { name: 'Peach', image: 'https://static.vecteezy.com/system/resources/thumbnails/041/061/520/small/realistic-peach-cut-in-quarters-ripe-raw-fruit-vector.jpg', details: 'Peaches are rich in vitamins A and C, which support healthy skin, immune function, and eye health. They are also high in fiber, promoting digestion.', sugar: '8g', water: '89%', calories: '39 kcal' },
+            { name: 'Pear', image: 'https://freepngimg.com/thumb/categories/1041.png', details: 'Pears are rich in fiber, vitamin C, and potassium, promoting digestive health and immune function.', sugar: '17g', water: '84%', calories: '57 kcal' },
+            { name: 'Guava', image: 'https://www.pngplay.com/wp-content/uploads/15/Guavas-Transparent-Background.png', details: 'Guavas are rich in vitamin C, fiber, and antioxidants, supporting immune health and digestion.', sugar: '5g', water: '81%', calories: '68 kcal' },
+            { name: 'Dragon Fruit', image: 'https://krushikendra.com/image/cache/catalog/NSC/Dragon%20fruits%203-200x200.jpeg', details: 'Dragon fruit is rich in fiber, vitamin C, and antioxidants like betalains, which help reduce inflammation and support digestion.', sugar: '8g', water: '90%', calories: '50 kcal' },
+            { name: 'Pomegranate', image: 'https://static.vecteezy.com/system/resources/thumbnails/038/450/979/small/ai-generated-pomegranate-ripe-sweet-fruit-isolated-on-transparent-background-free-png.png', details: 'Pomegranates are rich in vitamin C, potassium, and antioxidants like punicalagins, which help reduce inflammation and improve heart health.', sugar: '14g', water: '78%', calories: '83 kcal' },
+            { name: 'Cherries', image: 'https://static.vecteezy.com/system/resources/thumbnails/053/346/338/small/fresh-cherry-with-green-leaves-clipping-path-isolate-on-transparency-background-png.png', details: 'Cherries are packed with antioxidants like anthocyanins and vitamin C, which help protect the body from oxidative stress and promote heart health.', sugar: '8g', water: '82%', calories: '50 kcal' },
+            { name: 'Avocado', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-F4C8xv9Srt4O3OIllKKKsM6O3r0OvFk7vg&s', details: 'Avocados are high in healthy fats, vitamin E, and potassium, supporting heart health and skin health.', sugar: '0.2g', water: '73%', calories: '160 kcal' },
+            {name:'Custard Apple',image:'https://static.vecteezy.com/system/resources/thumbnails/052/782/689/small/fresh-custard-apple-with-slice-on-transparent-background-free-png.png',details:'Custard apples are rich in vitamin C, fiber, antioxidants, and potassium, supporting immune health and digestion.',sugar:'18g',water:'73%',calories:'94 kcal'},
+            {name:"Coconut",image:'https://freepngimg.com/thumb/categories/944.png',details:'Coconut is packed with healthy fats, fiber, potassium, and manganese, supporting hydration and digestion.',sugar:'6g',water:'47%',calories:'354 kcal'},
+            {name:"Rasp Berry",image: 'https://freepngimg.com/thumb/categories/1047.png',details:'Jackfruit is high in vitamin C, fiber, potassium, and antioxidants, promoting heart health and immune function.',sugar:'4g',water:'86%',calories:'52 kcal'},
+            {name:"Jack Fruit",image: 'https://pngimg.com/uploads/jackfruit/small/jackfruit_PNG1.png',details:'Jackfruit is high in vitamin C, fiber, potassium, and antioxidants, promoting heart health and immune function.',sugar:'19g',water:'73%',calories:'95 kcal'}
+        ];
+
+        const fruitsContainer = document.getElementById('fruits-container');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('close-modal');
+        const fruitName = document.getElementById('fruit-name');
+        const fruitDetails = document.getElementById('fruit-details');
+        const sugarContent = document.getElementById('sugar-content');
+        const waterContent = document.getElementById('water-content');
+        const caloriesContent = document.getElementById('calories-content');
+
+        function displayFruits(filteredFruits) {
+            fruitsContainer.innerHTML = '';
+            filteredFruits.forEach(fruit => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const img = document.createElement('img');
+                img.src = fruit.image;
+                img.alt = fruit.name;
+
+                const name = document.createElement('h3');
+                name.textContent = fruit.name;
+
+                const button = document.createElement('button');
+                button.textContent = 'View Details';
+                button.addEventListener('click', () => {
+                    fruitName.textContent = fruit.name;
+                    fruitDetails.textContent = fruit.details;
+                    sugarContent.textContent = `Sugar: ${fruit.sugar}`;
+                    waterContent.textContent = `Water: ${fruit.water}`;
+                    caloriesContent.textContent = `Calories: ${fruit.calories}`;
+                    modal.style.display = 'flex';
+                });
+
+                card.appendChild(img);
+                card.appendChild(name);
+                card.appendChild(button);
+                fruitsContainer.appendChild(card);
+            });
+        }
+
+        displayFruits(fruits);
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const filteredFruits = fruits.filter(fruit => fruit.name.toLowerCase().includes(searchTerm));
+            displayFruits(filteredFruits);
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

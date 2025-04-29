@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegetables and Healthy Recipes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+        .search-bar input {
+            width: 400px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        .search-bar button {
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+            justify-items: center;
+            margin: 20px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            width: 100%;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .card button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .card button:hover {
+            background-color: #45a049;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            text-align: left;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #back-button {
+            position: absolute;
+            right: 30px;
+            top: 35px;
+            padding: 10px;
+            background-color: white;
+            color:black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #back-button:hover {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vegetables and Healthy Recipes</h1>
+        <button id="back-button" onclick="window.location.href='home.html'">Back to Home</button>
+    </header>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for a vegetable...">
+        <button id="search-button">Search</button>
+    </div>
+    <div class="container" id="vegetables-container">
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h2 id="vegetable-name">Vegetable Name</h2>
+            <p id="vegetable-details" style="white-space: pre-wrap;">Details about the vegetable.</p>
+            <p><strong>Calories:</strong> <span id="vegetable-calories">0</span> kcal</p>
+            <h3>Healthy Recipe</h3>
+            <p id="vegetable-recipe" style="white-space: pre-wrap;">Healthy recipe for the vegetable.</p>
+        </div>
+    </div>
+
+    <script>
+        const vegetables = [
+            { name: 'Potato', image: 'https://atlas-content-cdn.pixelsquid.com/assets_v2/205/2050218972413957748/previews/G03-200x200.jpg', details: 'Potatoes are a great source of potassium.', recipe: '1. Wash and peel the potatoes.\n2. Cut them into wedges.\n3. Toss with olive oil and rosemary.\n4. Bake at 400°F for 30 minutes.', calories: 77 },
+            { name: 'Tomato', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfMSpG3xgc2gYQ7gXklBPHFE8aPvomwt3nJg&s', details: 'Tomatoes are rich in lycopene.', recipe: '1. Slice fresh tomatoes.\n2. Toss with olive oil and balsamic vinegar.\n3. Add salt and pepper to taste.', calories: 18 },
+            { name: 'Carrot', image: 'https://chefsmandala.com/wp-content/uploads/2018/03/Carrot-Whole-Cut-2.5-200x200.jpg', details: 'Carrots are rich in beta-carotene and good for vision.', recipe: '1. Peel and chop carrots.\n2. Add to boiling water with a pinch of salt.\n3. Cook for 10 minutes and serve.', calories: 41 },
+            { name: 'Cauliflower', image: 'https://plantinfo.co.za/wp-content/uploads/2020/07/cauliflower-Brassica-200x200.jpg', details: 'Cauliflower is high in fiber and vitamins.', recipe: '1. Break cauliflower into florets.\n2. Roast with olive oil and cumin.\n3. Bake at 400°F for 25 minutes.', calories: 25 },
+            { name: 'Cabbage', image: 'https://static.vecteezy.com/system/resources/thumbnails/035/047/775/small/ai-generated-high-quality-photo-of-fresh-green-cabbage-vegetable-png.png', details: 'Cabbage is rich in vitamin C and fiber.', recipe: '1. Shred cabbage.\n2. Sauté in olive oil with garlic.\n3. Add salt and pepper to taste.', calories: 25 },
+            { name: 'Brinjal', image: 'https://static.vecteezy.com/system/resources/thumbnails/029/720/172/small/brinjal-transparent-background-png.png', details: 'Brinjal is low in calories and high in fiber.', recipe: '1. Slice the brinjal.\n2. Grill with olive oil and garlic.\n3. Serve as a side dish.', calories: 25 },
+            { name: 'Ladyfinger', image: 'https://freepngimg.com/thumb/ladyfinger/42356-1-lady-finger-free-download-png-hd-thumb.png', details: 'Ladyfinger is a good source of vitamins and fiber.', recipe: '1. Slice LadyFinger into small pieces.\n2. Fry with onions and spices.\n3. Serve hot with rice.', calories: 33 },
+            { name: 'Bottle Gourd', image: 'https://5.imimg.com/data5/SG/HF/JT/SELLER-52971039/lauki-bottle-gourd-10-piece-250x250.jpg', details: 'Bottle gourd is hydrating and low in calories.', recipe: '1. Peel and chop bottle gourd.\n2. Cook with onions, tomatoes, and spices.\n3. Serve as a curry.', calories: 14 },
+            { name: 'Bitter Gourd', image: 'https://cdn.shopify.com/s/files/1/0451/1101/7626/products/bittergourdseeds.jpg?v=1603968417&width=200', details: 'Bitter gourd is great for regulating blood sugar levels.', recipe: '1. Slice bitter gourd and remove seeds.\n2. Sauté with garlic and onions.\n3. Add salt and cook until tender.', calories: 17 },
+            { name: 'Spinach', image: 'https://pngimg.com/uploads/spinach/small/spinach_PNG48.png', details: 'Spinach is high in iron and vitamins.', recipe: '1. Wash spinach leaves thoroughly.\n2. Sauté in olive oil with garlic and onion.\n3. Add salt and pepper to taste.', calories: 23 },
+            { name: 'Pumpkin', image: 'https://cdn.shopify.com/s/files/1/0451/1101/7626/products/pumpkinseeds.jpg?v=1603969662&width=200', details: 'Pumpkin is high in vitamins and fiber.', recipe: '1. Peel and chop the pumpkin.\n2. Boil in water with a pinch of salt.\n3. Mash and serve with a drizzle of olive oil.', calories: 26 },
+            { name: 'Beans', image: 'https://freepngimg.com/thumb/peas/135650-beans-green-peas-download-free-image-thumb.png', details: 'Beans are a good source of plant-based protein.', recipe: '1. Boil fresh Beans in water.\n2. Sauté with garlic and onion.\n3. Serve as a side dish.', calories: 31 },
+            { name: 'Radish', image: 'https://img2.exportersindia.com/product_images/bc-small/dir_72/2135384/fresh-radish-709009.jpg', details: 'Radish is low in calories and rich in antioxidants.', recipe: '1. Slice radish thinly.\n2. Toss with lemon juice and salt.\n3. Serve fresh as a salad.', calories: 16 },
+            { name: 'Cucumber', image: 'https://images.tridge.com/200x200/image/original/02/00/05/020005b13d0ad404f799123822a2f66e861d5a99.jpg', details: 'Cucumbers are hydrating and low in calories.', recipe: '1. Slice cucumbers.\n2. Serve with a dip like hummus.\n3. Enjoy as a light snack.', calories: 15 },
+            { name: 'Sweet Potato', image: 'https://gourmetgarden.in/cdn/shop/products/Sweet_Potatoe_8c1acd70-8254-4573-a489-102e1f50f2b1_200x.jpg?v=1736515964', details: 'Sweet potatoes are rich in beta-carotene and fiber.', recipe: '1. Peel and cube the sweet potato.\n2. Roast with olive oil at 400°F for 30 minutes.\n3. Serve as a side dish.', calories: 86 },
+            { name: 'Beetroot', image: 'https://pngimg.com/uploads/beet/small/beet_PNG25.png', details: 'Beetroots are high in antioxidants and fiber.', recipe: '1. Boil or roast beetroot.\n2. Slice into pieces.\n3. Toss with olive oil, salt, and vinegar.', calories: 43 },
+            { name: 'Capsicum', image: 'https://img1.exportersindia.com/product_images/bc-small/dir_113/3382852/green-capsicum-1840983.jpg', details: 'Capsicum is rich in vitamin C and antioxidants.', recipe: '1. Slice capsicum into strips.\n2. Sauté with olive oil and garlic.\n3. Serve as a side dish or in salads.', calories: 20 },
+            { name: 'Drumstick', image: 'https://images-eu.ssl-images-amazon.com/images/I/518PlR0x4dL._AC_UL200_SR200,200_.jpg', details: 'Drumsticks are rich in vitamins and minerals.', recipe: '1. Peel and cut drumsticks into pieces.\n2. Boil with lentils and spices.\n3. Serve as a curry.', calories: 37 },
+            { name: 'Ridge Gourd', image: 'https://static.vecteezy.com/system/resources/thumbnails/053/119/350/small/fresh-ridge-gourd-vegetable-with-slice-and-leaf-on-transparent-background-free-png.png', details: 'Ridge gourd is rich in fiber and low in calories.', recipe: '1. Peel and chop ridge gourd.\n2. Sauté with onions and tomatoes.\n3. Serve as a curry.', calories: 20 },
+            { name: 'Broccoli', image: 'https://pngimg.com/d/broccoli_PNG72869.png', details: 'Broccoli is rich in vitamins C and K, folate, fiber, potassium, calcium, iron, and antioxidants, making it a powerhouse for immune, bone, and digestive health.', recipe: '1. Prepare the broccoli by rinsing it and cutting it into bite-sized florets.\n2. Blanch the broccoli (optional) by boiling it for 2-3 minutes, then drain.\n3. Sauté garlic in olive oil for 1-2 minutes until fragrant, then add the broccoli.\n4. Season and serve by adding salt, pepper, lemon juice, and optionally lemon zest, then enjoy!', calories: 55 },
+            { name: 'Mushroom', image: 'https://freepngimg.com/thumb/mushroom/7-2-mushroom-png-image-thumb.png', details: 'Mushrooms are rich in B vitamins, vitamin D, fiber, potassium, and antioxidants, promoting energy, immune health, and overall well-being.', recipe: '1. Clean and slice mushrooms.\n2. Melt butter in a skillet and sauté garlic.\n3. Add mushrooms and cook until golden.\n4. Season with salt, pepper, and herbs, then serve.', calories: 22 }
+        ];
+
+        const vegetablesContainer = document.getElementById('vegetables-container');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('close-modal');
+        const vegetableName = document.getElementById('vegetable-name');
+        const vegetableDetails = document.getElementById('vegetable-details');
+        const vegetableRecipe = document.getElementById('vegetable-recipe');
+        const vegetableCalories = document.getElementById('vegetable-calories');
+
+        function displayVegetables(filteredVegetables) {
+            vegetablesContainer.innerHTML = '';
+            filteredVegetables.forEach(vegetable => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const img = document.createElement('img');
+                img.src = vegetable.image;
+                img.alt = vegetable.name;
+
+                const name = document.createElement('h3');
+                name.textContent = vegetable.name;
+
+                const button = document.createElement('button');
+                button.textContent = 'View Details';
+                button.addEventListener('click', () => {
+                    vegetableName.textContent = vegetable.name;
+                    vegetableDetails.textContent = vegetable.details;
+                    vegetableRecipe.textContent = vegetable.recipe;
+                    vegetableCalories.textContent = vegetable.calories;
+                    modal.style.display = 'flex';
+                });
+
+                card.appendChild(img);
+                card.appendChild(name);
+                card.appendChild(button);
+                vegetablesContainer.appendChild(card);
+            });
+        }
+
+        displayVegetables(vegetables);
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const filteredVegetables = vegetables.filter(vegetable => vegetable.name.toLowerCase().includes(searchTerm));
+            displayVegetables(filteredVegetables);
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
